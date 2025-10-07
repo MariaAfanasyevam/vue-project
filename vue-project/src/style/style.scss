@@ -27,7 +27,7 @@ input {
 
 button{
   padding: 8px 16px;
-  background-color: #6fa3dc;
+  background-color: #1d7ee8;
   color: white;
   border: none;
   border-radius: 4px;
@@ -38,6 +38,24 @@ button{
 
 .actions-container {
   border: 1px solid #ccc;
-  height: 50vh;
+  height: 70vh;
   align-items: start;
+  overflow-y: scroll;
+}
+.action-header {
+  color: gray;
+}
+.action-title{
+  color: saddlebrown;
+}
+.event-item{
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.action-label{
+  font-size:16px;
+  font-weight: bold;
+}
+.error{
+  color:red;
 }
