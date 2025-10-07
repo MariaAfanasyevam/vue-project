@@ -1,0 +1,35 @@
+.container {
+  max-width: 800px;
+  margin: 10px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.rows-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 20px;
+}
+.input-row{
+  flex:1;
+  margin-right: 30px;
+}
+input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+button{
+  padding: 8px 16px;
+  background-color: #6fa3dc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  white-space: nowrap;
+}
