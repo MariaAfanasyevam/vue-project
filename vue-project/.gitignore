@@ -28,3 +28,7 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# CSS compiled files
+src/style/style.css
+src/style/style.css.map
