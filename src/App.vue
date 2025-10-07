@@ -141,7 +141,7 @@ watch([price, amount, quantity], (): void => {
 });
 
 onMounted((): void => {
-  const localData: string | null = localStorage.getItem("localStorageData");
+  const localData: string | null = localStorage.getItem("localData");
   if (localData) {
     try {
       const parsed: LocalStorageData = JSON.parse(localData);
@@ -213,4 +213,4 @@ onMounted((): void => {
   </div>
 </template>
 
-<style src="./style/style.css"></style>
+<style src="./style/style.scss"></style>
