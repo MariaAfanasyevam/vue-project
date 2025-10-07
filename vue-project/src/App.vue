@@ -168,10 +168,12 @@ onMounted(() => {
         <div class="action-label">События</div>
         <div v-for="event in events" :key="event.id" class="event-item">
           <div class="action-header">{{ event.time }}</div>
-          <div class="action-title" :class="{ error: success }">
+          <div class="action-title">
             {{ event.type }}
           </div>
-          <div class="action-body">{{ event.body }}</div>
+          <div class="action-body">
+            {{ event.body }}
+          </div>
         </div>
       </div>
     </div>
