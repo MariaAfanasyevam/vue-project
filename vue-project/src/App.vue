@@ -1,14 +1,31 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 
+interface EventData {
+  id: number;
+  type: string;
+  body: string;
+  time: string;
+}
+
+interface LocalStorageData {
+  counter: number;
+  price: number;
+  quantity: number;
+  amount: number;
+}
+
+type InputField = "price" | "quantity" | "amount";
+
 const price = ref<number>(0);
-const quantity = ref(0);
-const amount = ref(0);
-const counter = ref(0);
-const changedInput = ref("");
-const events = ref([]);
-const localStorageInfo = computed(() => {
-  const data = {
+const quantity = ref<number>(0);
+const amount = ref<number>(0);
+const counter = ref<number>(0);
+const changedInput = ref<InputField | "">("");
+const events = ref<EventData[]>([]);
+
+const localStorageInfo = computed((): string => {
+  const data: LocalStorageData = {
     counter: counter.value,
     price: price.value,
     quantity: quantity.value,
@@ -17,18 +34,22 @@ const localStorageInfo = computed(() => {
   return JSON.stringify(data);
 });
 
-let timer;
-const debounce = (f, delay) => {
-  return (...args) => {
+let timer: number | null = null;
+
+const debounce = <T extends (...args: any[]) => void>(
+  f: T,
+  delay: number,
+): T => {
+  return ((...args: Parameters<T>) => {
     if (timer) {
       clearTimeout(timer);
     }
     timer = setTimeout(() => f(...args), delay);
-  };
+  }) as T;
 };
 
-const logEvent = (type, body) => {
-  const event = {
+const logEvent = (type: string, body: string): void => {
+  const event: EventData = {
     id: Date.now(),
     type,
     body,
@@ -37,6 +58,7 @@ const logEvent = (type, body) => {
 
   events.value.unshift(event);
 };
+
 const onChangePrice = debounce((): void => {
   changedInput.value = "price";
   logEvent("Изменено значение в поле Цена", `Цена изменена на ${price.value}`);
@@ -57,6 +79,7 @@ const onChangeAmount = debounce((): void => {
     `Сумма изменена на ${amount.value}`,
   );
 }, 300);
+
 const onSave = async (): Promise<void> => {
   counter.value += 1;
   const datatoLocal: LocalStorageData = {
@@ -65,10 +88,12 @@ const onSave = async (): Promise<void> => {
     quantity: quantity.value,
     amount: amount.value,
   };
-  
+
   const localStorageData: string | null = localStorage.getItem("localData");
-  const oldLocalData: LocalStorageData | null = localStorageData ? JSON.parse(localStorageData) : null;
-  
+  const oldLocalData: LocalStorageData | null = localStorageData
+    ? JSON.parse(localStorageData)
+    : null;
+
   logEvent(
     "Отправка данных",
     `Отправлено: ${JSON.stringify(datatoLocal)}, значение в localStorage: ${JSON.stringify(oldLocalData, null, 2)}`,
@@ -76,12 +101,15 @@ const onSave = async (): Promise<void> => {
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  const parsedLocalData: LocalStorageData | null = localStorageData ? JSON.parse(localStorageData) : null;
+  const parsedLocalData: LocalStorageData | null = localStorageData
+    ? JSON.parse(localStorageData)
+    : null;
   const success: boolean = amount.value % 2 === 0;
-  
+
   if (success) {
     localStorage.setItem("localData", JSON.stringify(datatoLocal));
-    const updatedLocalStorageData: string | null = localStorage.getItem("localData");
+    const updatedLocalStorageData: string | null =
+      localStorage.getItem("localData");
     logEvent(
       "Сообщение от сервера",
       `Сохранено: ${JSON.stringify(datatoLocal)},  значение в localStorage:${updatedLocalStorageData}}`,
@@ -127,6 +155,7 @@ onMounted((): void => {
   }
 });
 </script>
+
 <template>
   <div class="container">
     <div class="rows-container">
@@ -183,4 +212,5 @@ onMounted((): void => {
     </div>
   </div>
 </template>
+
 <style src="./style/style.css"></style>
