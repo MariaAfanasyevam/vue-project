@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 
-const price = ref(0);
+const price = ref<number>(0);
 const quantity = ref(0);
 const amount = ref(0);
 const counter = ref(0);
@@ -37,36 +37,38 @@ const logEvent = (type, body) => {
 
   events.value.unshift(event);
 };
-const onChangePrice = debounce(() => {
+const onChangePrice = debounce((): void => {
   changedInput.value = "price";
   logEvent("Изменено значение в поле Цена", `Цена изменена на ${price.value}`);
 }, 300);
 
-const onChangeQuantity = debounce(() => {
-  changeInput.value = "quantity";
+const onChangeQuantity = debounce((): void => {
+  changedInput.value = "quantity";
   logEvent(
     "Изменено значение в поле Количество",
     `Количество изменено на ${quantity.value}`,
   );
 }, 300);
 
-const onChangeAmount = debounce(() => {
+const onChangeAmount = debounce((): void => {
   changedInput.value = "amount";
   logEvent(
     "Изменено значение в поле Amount",
     `Сумма изменена на ${amount.value}`,
   );
 }, 300);
-const onSave = async () => {
+const onSave = async (): Promise<void> => {
   counter.value += 1;
-  const datatoLocal = {
+  const datatoLocal: LocalStorageData = {
     counter: counter.value,
     price: price.value,
     quantity: quantity.value,
     amount: amount.value,
   };
-  let localStorageData = localStorage.getItem("localData");
-  let oldLocalData = JSON.parse(localStorageData);
+  
+  const localStorageData: string | null = localStorage.getItem("localData");
+  const oldLocalData: LocalStorageData | null = localStorageData ? JSON.parse(localStorageData) : null;
+  
   logEvent(
     "Отправка данных",
     `Отправлено: ${JSON.stringify(datatoLocal)}, значение в localStorage: ${JSON.stringify(oldLocalData, null, 2)}`,
@@ -74,11 +76,12 @@ const onSave = async () => {
 
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
-  let parsedLocalData = JSON.parse(localStorageData);
-  const success = amount.value % 2 === 0;
+  const parsedLocalData: LocalStorageData | null = localStorageData ? JSON.parse(localStorageData) : null;
+  const success: boolean = amount.value % 2 === 0;
+  
   if (success) {
     localStorage.setItem("localData", JSON.stringify(datatoLocal));
-    const updatedLocalStorageData = localStorage.getItem("localData");
+    const updatedLocalStorageData: string | null = localStorage.getItem("localData");
     logEvent(
       "Сообщение от сервера",
       `Сохранено: ${JSON.stringify(datatoLocal)},  значение в localStorage:${updatedLocalStorageData}}`,
@@ -91,7 +94,7 @@ const onSave = async () => {
   }
 };
 
-const calculate = () => {
+const calculate = (): void => {
   if (changedInput.value === "price") {
     amount.value = price.value * quantity.value;
   } else if (changedInput.value === "quantity") {
@@ -103,19 +106,20 @@ const calculate = () => {
   }
 };
 
-watch([price, amount, quantity], () => {
+watch([price, amount, quantity], (): void => {
   if (changedInput.value) {
     calculate();
   }
 });
-onMounted(() => {
-  const localData = localStorage.getItem("localStorageData");
+
+onMounted((): void => {
+  const localData: string | null = localStorage.getItem("localStorageData");
   if (localData) {
     try {
-      const parsed = JSON.parse(localData);
+      const parsed: LocalStorageData = JSON.parse(localData);
       counter.value = parsed.counter || 0;
       price.value = parsed.price || 0;
-      quantity.value = parsed.price || 0;
+      quantity.value = parsed.quantity || 0; // Исправлена ошибка: было parsed.price
       amount.value = parsed.amount || 0;
     } catch (e) {
       console.log(e);
