@@ -85,8 +85,6 @@ const computedLocalStorageInfo = computed(() => {
 });
 
 onMounted(() => {
-  const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
-
   const savedData = loadFromLocalStorage();
 
   if (savedData) {

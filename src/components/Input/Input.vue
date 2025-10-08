@@ -1,24 +1,20 @@
 <script setup lang="ts">
-import { watch } from "vue";
+import { toRefs } from "vue";
 interface Props {
   id: string;
   type?: string;
   placeholder?: string;
 }
 
-const Props = withDefaults(defineProps(), {
+const props = withDefaults(defineProps<Props>(), {
   type: "number",
 });
-
+const { id, type, placeholder } = toRefs(props);
 const model = defineModel();
-
-watch(model, (newValue) => {
-  model.value = newValue;
-});
 </script>
 
 <template>
-  <input id="id" type="type" placeholder="placeholder" v-model="model" />
+  <input :id="id" :type="type" :placeholder="placeholder" v-model="model" />
 </template>
 
 <style scoped src="./Input.scss"></style>
