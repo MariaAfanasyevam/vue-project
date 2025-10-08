@@ -12,8 +12,6 @@
 
 git clone https://github.com/MariaAfanasyevam/vue-project.git
 
-cd vue-project
-
 npm install
 
 npm run dev
