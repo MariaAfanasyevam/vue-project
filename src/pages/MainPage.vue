@@ -5,36 +5,36 @@ import InputForm from "@/components/InputForm/InputForm.vue";
 import { useCalculation } from "@/features/useCalculation.ts";
 import { useEventLogging } from "@/features/useEventLogging.ts";
 import { useStorageData } from "@/features/useStorageData.ts";
-import type { LocalStorageData } from "@/types/types.ts";
+import type { InputField, LocalStorageData } from "@/types/types.ts";
 import { computed, onMounted } from "vue";
-
+import { DELAY, LOCAL_STORAGE_KEY } from "@/constants/common.ts";
 const { price, quantity, amount, setChangedInput } = useCalculation();
 const { events, logEvent } = useEventLogging();
-const { counter, localStorageInfo, saveToLocalStorage, loadFromLocalStorage } =
-  useStorageData();
+const { counter, saveToLocalStorage, loadFromLocalStorage } = useStorageData();
 
-const handleInputChanged = (field: "price" | "quantity" | "amount") => {
+const handleInputChanged = (field: InputField) => {
   setChangedInput(field);
+  const messages = {
+    price: {
+      title: "Изменено значение в поле Цена",
+      text: `Цена изменена на ${price.value}`,
+    },
+    quantity: {
+      title: "Изменено значение в поле Количество",
+      text: `Цена изменена на ${quantity.value}`,
+    },
+    amount: {
+      title: "Изменено значение в поле Сумма",
+      text: `Цена изменена на ${amount.value}`,
+    },
+  } satisfies Record<InputField, { title: string; text: string }>;
 
-  if (field === "price") {
-    logEvent(
-      "Изменено значение в поле Цена",
-      `Цена изменена на ${price.value}`,
-    );
-  } else if (field === "quantity") {
-    logEvent(
-      "Изменено значение в поле Количество",
-      `Количество изменено на ${quantity.value}`,
-    );
-  } else if (field === "amount") {
-    logEvent(
-      "Изменено значение в поле Amount",
-      `Сумма изменена на ${amount.value}`,
-    );
-  }
+  const message = messages[field];
+
+  logEvent(message.title, message.text);
 };
 
-const handleSave = async (): Promise<boolean> => {
+const handleSave = async (): Promise<void> => {
   const datatoLocal: LocalStorageData = {
     counter: counter.value,
     price: price.value,
@@ -42,7 +42,8 @@ const handleSave = async (): Promise<boolean> => {
     amount: amount.value,
   };
 
-  const localStorageData: string | null = localStorage.getItem("localData");
+  const localStorageData: string | null =
+    localStorage.getItem(LOCAL_STORAGE_KEY);
   const oldLocalData: LocalStorageData | null = localStorageData
     ? JSON.parse(localStorageData)
     : null;
@@ -52,7 +53,7 @@ const handleSave = async (): Promise<boolean> => {
     `Отправлено: ${JSON.stringify(datatoLocal)}, значение в localStorage: ${JSON.stringify(oldLocalData, null, 2)}`,
   );
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, DELAY));
 
   const parsedLocalData: LocalStorageData | null = localStorageData
     ? JSON.parse(localStorageData)
@@ -61,7 +62,7 @@ const handleSave = async (): Promise<boolean> => {
 
   if (success) {
     const updatedLocalStorageData: string | null =
-      localStorage.getItem("localData");
+      localStorage.getItem(LOCAL_STORAGE_KEY);
     logEvent(
       "Сообщение от сервера",
       `Сохранено: ${JSON.stringify(datatoLocal)},  значение в localStorage:${updatedLocalStorageData}}`,
@@ -84,7 +85,7 @@ const computedLocalStorageInfo = computed(() => {
 });
 
 onMounted(() => {
-  const rawData = localStorage.getItem("localData");
+  const rawData = localStorage.getItem(LOCAL_STORAGE_KEY);
 
   const savedData = loadFromLocalStorage();
 
@@ -115,4 +116,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped src="./MainPage.scss"></style>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from "vue";
 interface Props {
   id: string;
   type?: string;
@@ -11,21 +12,13 @@ const Props = withDefaults(defineProps(), {
 
 const model = defineModel();
 
-const handleInput = (event: Event): void => {
-  const target = event.target as HTMLInputElement;
-  const value = parseFloat(target.value) || 0;
-  model.value = value;
-};
+watch(model, (newValue) => {
+  model.value = newValue;
+});
 </script>
 
 <template>
-  <input
-    id="id"
-    type="type"
-    placeholder="placeholder"
-    v-model="model"
-    @input="handleInput"
-  />
+  <input id="id" type="type" placeholder="placeholder" v-model="model" />
 </template>
 
-<style scoped></style>
+<style scoped src="./Input.scss"></style>

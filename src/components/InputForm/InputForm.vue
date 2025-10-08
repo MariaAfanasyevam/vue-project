@@ -48,7 +48,7 @@ const onSave = (): void => {
       />
     </div>
     <div class="input-row">
-      <input
+      <Input
         id="quantity"
         type="number"
         placeholder="Количество"
@@ -57,7 +57,7 @@ const onSave = (): void => {
       />
     </div>
     <div class="input-row">
-      <input
+      <Input
         id="amount"
         type="number"
         placeholder="Сумма"
@@ -71,4 +71,4 @@ const onSave = (): void => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped src="./InputForm.scss"></style>

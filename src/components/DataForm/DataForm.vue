@@ -10,11 +10,11 @@ defineProps<Props>();
 
 <template>
   <div class="labels-container">
-    <label for="price" class="label">Цена {{ price }}</label>
-    <label for="quantity" class="label">Количество {{ quantity }}</label>
-    <label for="amount" class="label">Сумма {{ amount }}</label>
-    <div class="label">Localstorage {{ localStorageInfo }}</div>
+    <label for="price" class="label-item">Цена {{ price }}</label>
+    <label for="quantity" class="label-item">Количество {{ quantity }}</label>
+    <label for="amount" class="label-item">Сумма {{ amount }}</label>
+    <div class="label-item">Localstorage {{ localStorageInfo }}</div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped src="./DataForm.scss"></style>

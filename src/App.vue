@@ -6,4 +6,4 @@ import MainPage from "@/pages/MainPage.vue";
   <MainPage />
 </template>
 
-<style src="./style/style.scss"></style>
+<style></style>

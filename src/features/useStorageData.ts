@@ -1,18 +1,9 @@
 import { computed, onMounted, ref } from "vue";
 import type { LocalStorageData } from "@/types/types.ts";
+import { DELAY, LOCAL_STORAGE_KEY } from "@/constants/common.ts";
 
 export function useStorageData() {
   const counter = ref<number>(0);
-  const localStorageInfo = computed((): string => {
-    const data: LocalStorageData = {
-      counter: counter.value,
-      price: price.value,
-      quantity: quantity.value,
-      amount: amount.value,
-    };
-    return JSON.stringify(data);
-  });
-
   const saveToLocalStorage = async (
     data: LocalStorageData,
   ): Promise<boolean> => {
@@ -22,25 +13,17 @@ export function useStorageData() {
       counter: counter.value,
     };
 
-    const localStorageData: string | null = localStorage.getItem("localData");
-    const oldLocalData: LocalStorageData | null = localStorageData
-      ? JSON.parse(localStorageData)
-      : null;
+    await new Promise((resolve) => setTimeout(resolve, DELAY));
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    const parsedLocalData: LocalStorageData | null = localStorageData
-      ? JSON.parse(localStorageData)
-      : null;
-    const success: boolean = amount.value % 2 === 0;
+    const success: boolean = datatoLocal.amount % 2 === 0;
 
     if (success) {
-      localStorage.setItem("localData", JSON.stringify(datatoLocal));
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(datatoLocal));
     }
     return success;
   };
   const loadFromLocalStorage = (): LocalStorageData | null => {
-    const localData: string | null = localStorage.getItem("localData");
+    const localData: string | null = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (localData) {
       try {
         const parsed: LocalStorageData = JSON.parse(localData);
@@ -49,6 +32,8 @@ export function useStorageData() {
       } catch (e) {
         return null;
       }
+    } else {
+      return null;
     }
   };
   onMounted((): void => {
@@ -56,7 +41,6 @@ export function useStorageData() {
   });
   return {
     counter,
-    localStorageInfo,
     saveToLocalStorage,
     loadFromLocalStorage,
   };
